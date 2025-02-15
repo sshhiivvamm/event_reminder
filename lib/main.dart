@@ -1,4 +1,5 @@
 import 'package:event_reminder/firebase_options.dart';
+import 'package:event_reminder/navigation.dart';
 import 'package:event_reminder/screens/dashboard.dart';
 import 'package:event_reminder/screens/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Dashboard(),
+      home: const Navigation(),
     );
   }
 }
