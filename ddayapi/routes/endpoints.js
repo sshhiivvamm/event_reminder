@@ -6,58 +6,88 @@ const Reminder = require('../models/reminders');
 
 
 // API endpoint to save firm data 
-router.post('/save-reminder', async (req, res) => {
+router.post("/save-reminder", async (req, res) => {
     try {
-        // Destructuring the fields from the request body
-        const { firm_name, firm_address, certificate, issued_date, expiry_date } = req.body;
-
-        // Check if all required fields are present
-        if (!firm_name || !firm_address || !certificate || !issued_date || !expiry_date) {
-            return res.status(400).json({
-                success: false,
-                message: 'All fields are required'
-            });
-        }
-
-        // Convert date fields into Date objects
-
-
-        // Create a new firm instance
-        const newReminder = new Reminder({
-            firm_name,
-            firm_address,
-            certificate,
-            issued_date,
-            expiry_date,
+      // Destructuring the fields from the request body
+      const {
+        firm_name,
+        firm_address,
+        gst,
+        certification_body,
+        contact,
+        reference,
+        basic_amount,
+        certificate,
+        issued_date,
+        expiry_date,
+      } = req.body;
+  
+      // Check if all required fields are present
+      if (
+        !firm_name ||
+        !firm_address ||
+        !gst ||
+        !certification_body ||
+        !contact ||
+        !reference ||
+        !basic_amount ||
+        !certificate ||
+        !issued_date ||
+        !expiry_date
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "All fields are required",
         });
-
-        // Save the firm to the database
-        await newReminder.save();
-
-        // Respond with a success message and the saved firm data
-        res.status(201).json({
-            success: true,
-            message: 'Firm data saved successfully',
-            reminder: {
-                _id: newReminder._id,
-                firm_name: newReminder.firm_name,
-                firm_address: newReminder.firm_address,
-                certificate: newReminder.certificate,
-                issued_date: newReminder.issued_date,
-                expiry_date: newReminder.expiry_date,
-                createdAt: newReminder.createdAt,
-                updatedAt: newReminder.updatedAt
-            }
-        });
+      }
+  
+      // Convert date fields into Date objects
+  
+      // Create a new firm instance
+      const newReminder = new Reminder({
+        firm_name,
+        firm_address,
+        gst,
+        certification_body,
+        contact,
+        reference,
+        basic_amount,
+        certificate,
+        issued_date,
+        expiry_date,
+      });
+  
+      // Save the firm to the database
+      await newReminder.save();
+  
+      // Respond with a success message and the saved firm data
+      res.status(201).json({
+        success: true,
+        message: "Firm data saved successfully",
+        reminder: {
+          _id: newReminder._id,
+          firm_name: newReminder.firm_name,
+          firm_address: newReminder.firm_address,
+          gst: newReminder.gst,
+          certification_body: newReminder.certification_body,
+          contact: newReminder.contact,
+          reference: newReminder.reference,
+          issued_date: newReminder.issued_date,
+          expiry_date: newReminder.expiry_date,
+          certificate: newReminder.certificate,
+          createdAt: newReminder.createdAt,
+          updatedAt: newReminder.updatedAt,
+        },
+      });
     } catch (error) {
-        console.error(error.message);  // Log the error message
-        res.status(500).json({
-            success: false,
-            message: 'Server error',
-            error: error.message
-        });
-    }
-});
+      console.error(error.message); // Log the error message
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }  
+  });
 
 router.get('/all-reminders', async (req, res) => {
     try {

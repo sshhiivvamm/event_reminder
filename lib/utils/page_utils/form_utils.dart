@@ -23,6 +23,8 @@ class FormUtils {
       TextEditingController();
   static final TextEditingController referenceController =
       TextEditingController();
+  static final TextEditingController usernameController= TextEditingController();    
+  static final TextEditingController passwordController= TextEditingController();    
 
   static List<String> dropdownItems = [
     "ISO 9001 - Quality Management System",

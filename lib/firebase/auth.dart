@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:event_reminder/navigation.dart';
 import 'package:event_reminder/screens/dashboard.dart';
 import 'package:event_reminder/screens/signup.dart';
 import 'package:event_reminder/utils/colors.dart';
@@ -15,7 +16,7 @@ class AuthService {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => SignUp(),
-      ),  
+      ),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -52,7 +53,7 @@ class AuthService {
       // Navigate to Dashboard after showing the snackbar
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
+        MaterialPageRoute(builder: (BuildContext context) => Navigation()),
       );
     } on FirebaseAuthException catch (e) {
       String message = '';
@@ -113,7 +114,7 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => Dashboard(),
+          builder: (BuildContext context) => Navigation(),
         ),
       );
     } on FirebaseAuthException catch (e) {

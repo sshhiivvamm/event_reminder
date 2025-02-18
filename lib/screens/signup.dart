@@ -1,5 +1,5 @@
 import 'package:event_reminder/firebase/auth.dart';
-import 'package:event_reminder/screens/signin.dart';
+import 'package:event_reminder/screens/login.dart';
 import 'package:event_reminder/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -136,7 +136,7 @@ class _SignUpState extends State<SignUp> {
               TextButton(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()));
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
                 child: Text(
                   "Already have a account? Login",
