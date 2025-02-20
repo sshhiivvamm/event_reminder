@@ -22,7 +22,7 @@ class ReminderField extends StatelessWidget {
       child: TextFormField(
         keyboardType: keyboardType,
         controller: controller,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
             filled: true,
             fillColor: EventColors.pgreen,

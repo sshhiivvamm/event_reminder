@@ -10,7 +10,7 @@ const getReminderByDate = async (req, res) => {
     const formattedDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
   
     if (isNaN(formattedDate)) {
-      return res.status(400).json({ message: 'Invalid date format. Expected DD-MM-YYYY.' });
+      return res.status(400).json({ message: 'Invalid date format. Expected dd-MM-yyyy' });
     }
   
     try {
@@ -47,7 +47,7 @@ const getReminderByDateRange = async (req, res) => {
   
     // Check if the date parsing resulted in an invalid date
     if (isNaN(startDate) || isNaN(endDate)) {
-      return res.status(400).json({ message: 'Invalid date format. Expected DD-MM-YYYY.' });
+      return res.status(400).json({ message: 'Invalid date format. Expected dd-MM-yyyy' });
     }
   
     try {
@@ -69,44 +69,77 @@ const getReminderByDateRange = async (req, res) => {
   };
   
 
-// Save a new reminder
-const saveReminder = async (req, res) => {
-  const {
-    firm_name, firm_address, gst, certification_body, contact, reference,
-    basic_amount, certificate, issued_date, expiry_date
-  } = req.body;
-
-  if (!firm_name || !firm_address || !gst || !certification_body || !contact || 
-      !reference || !basic_amount || !certificate || !issued_date || !expiry_date) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required",
-    });
-  }
-
-  try {
-    const newReminder = new Reminder({
+  const saveReminder = async (req, res) => {
+    const {
       firm_name, firm_address, gst, certification_body, contact, reference,
       basic_amount, certificate, issued_date, expiry_date
-    });
-
-    await newReminder.save();
-
-    res.status(201).json({
-      success: true,
-      message: "Reminder saved successfully",
-      reminder: newReminder,
-    });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-};
-
+    } = req.body;
+  
+    // Check for required fields
+    if (!firm_name || !firm_address || !gst || !certification_body || !contact || 
+        !reference || !basic_amount || !certificate || !issued_date || !expiry_date) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+  
+    // Updated Date format validation (accepts YYYY-MM-DD format)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(issued_date) || !dateRegex.test(expiry_date)) {
+      return res.status(400).json({
+        success: false,
+        message: "Dates must be in YYYY-MM-DD format",
+      });
+    }
+  
+    try {
+      // Directly use the string in YYYY-MM-DD format to create Date objects
+      const issuedDate = new Date(issued_date);  // JavaScript Date object
+      const expiryDate = new Date(expiry_date);  // JavaScript Date object
+  
+      // Validate if the conversion results in valid Date objects
+      if (isNaN(issuedDate) || isNaN(expiryDate)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid date format after conversion",
+        });
+      }
+  
+      // Create a new Reminder object
+      const newReminder = new Reminder({
+        firm_name, 
+        firm_address, 
+        gst, 
+        certification_body, 
+        contact, 
+        reference,
+        basic_amount, 
+        certificate, 
+        issued_date: issuedDate,  // JavaScript Date object
+        expiry_date: expiryDate,  // JavaScript Date object
+      });
+  
+      // Save to the database
+      await newReminder.save();
+  
+      // Respond with success
+      res.status(201).json({
+        success: true,
+        message: "Reminder saved successfully",
+        reminder: newReminder,
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  };
+  
+  
 // Get all reminders
 const allreminders = async (req, res) => {
   try {
@@ -121,6 +154,8 @@ const allreminders = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
+
+
 
 module.exports = {
   getReminderByDate,
