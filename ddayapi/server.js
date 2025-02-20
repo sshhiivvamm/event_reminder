@@ -1,24 +1,30 @@
-require('dotenv').config()
-
+// server.js
+require('dotenv').config();
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+// Import routes
+const remindersRouter = require('./routes/reminderRoutes');
+
+// Set up the app
+const app = express();
+app.use(express.json());
+
+// Connect to the database
 mongoose.connect(process.env.DATABASE_URL)
-    .then(() => {
-        console.log('Connected to Database');
-    })
-    .catch((error) => {
-        console.error('Error connecting to the database:', error);
-    });
+  .then(() => {
+    console.log('Connected to Database');
+  })
+  .catch((error) => {
+    console.error('Error connecting to the database:', error);
+  });
 
-
-app.use(express.json())
- 
-const remindersRouter = require('./routes/endpoints')
-
+// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/reminders', remindersRouter)
+// Use the reminder routes
+app.use('/routes', remindersRouter);
+
+// Start the server
 app.listen(3000, () => console.log('Server Started'));
